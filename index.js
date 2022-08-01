@@ -22,10 +22,19 @@ let server = http.createServer((req, res) => {
     let headers = req.headers;
 
     //Get the payload, if any
+    let decoder = new StringDecoder('utf-8');
+    let buffer = '';
+    req.on('data', (data) => {
+        buffer += decoder.write(data);
+    })
 
-    res.end('Hello World\n');
+    req.on('end', () => {
+        buffer += decoder.end();
+        res.end('Hello World\n');
+    
+        console.log('Request recieved on path:' + trimmedPath + ' With method: ' + method);
+    })
 
-    console.log('Request recieved on path:' + trimmedPath + ' With method: ' + method);
 
 })
 
